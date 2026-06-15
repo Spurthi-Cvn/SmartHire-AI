@@ -9,3 +9,8 @@ class CandidateCreate(BaseModel):
 class CandidateLogin(BaseModel):
     email: str
     password: str
+    
+class CandidateUpdate(BaseModel):
+    name: str
+    email: str
+    phone: str
