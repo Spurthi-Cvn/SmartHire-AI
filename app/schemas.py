@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
+class AptitudeAnswers(BaseModel):
+    answers: dict
+
 class CandidateCreate(BaseModel):
     name: str
     email: str
