@@ -1,5 +1,18 @@
 from pydantic import BaseModel
 
+from typing import Dict
+
+from typing import Dict
+
+class HRAnswers(BaseModel):
+    answers: Dict[str, str]
+
+class TechnicalAnswers(BaseModel):
+    answers: Dict[str, str]
+    
+class CommunicationAnswers(BaseModel):
+    answers: dict
+
 class AptitudeAnswers(BaseModel):
     answers: dict
 
