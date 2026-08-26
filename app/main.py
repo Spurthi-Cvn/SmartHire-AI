@@ -9,6 +9,7 @@ from app.routers.candidate import router as candidate_router
 from app.routers.communication import router as communication_router
 from app.routers.technical import router as technical_router
 from app.routers.hr import router as hr_router
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers.selection import router as selection_router
 from app.routers.offer import router as offer_router
 from app.routers.joining import router as joining_router
@@ -20,6 +21,14 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="AI Recruitment Platform"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(candidate_router)
