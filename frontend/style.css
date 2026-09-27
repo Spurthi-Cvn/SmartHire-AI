@@ -1,495 +1,127 @@
-.navbar{
-    padding:14px 0;
-    background:rgba(10,20,40,.85);
-    backdrop-filter:blur(15px);
-}
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI,sans-serif;
+/* =====================================
+   MNC RECRUITMENT STAGES
+===================================== */
+
+.recruitment-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-body{
+.stage-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-background:#081221;
+    padding: 15px 18px;
 
-color:white;
+    background: rgba(255,255,255,0.04);
 
-overflow-x:hidden;
+    border: 1px solid rgba(255,255,255,0.08);
 
+    border-radius: 8px;
+
+    transition: 0.2s;
 }
 
-.navbar{
-
-padding:20px 0;
-
-background:rgba(10,20,40,.75);
-
-backdrop-filter:blur(15px);
-
+.stage-row:hover {
+    transform: translateY(-1px);
 }
 
-.navbar-brand small{
-    display:block;
-    margin-top:8px;
-    font-size:13px;
-    color:#9CA3AF;
-}
-.navbar-brand small{
-
-font-size:13px;
-
-color:#9CA3AF;
-
+.stage-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-.nav-link{
+.stage-icon {
+    width: 40px;
+    height: 40px;
 
-margin-left:20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-font-size:17px;
+    border-radius: 8px;
 
+    background: rgba(59,130,246,0.15);
+
+    font-size: 20px;
 }
 
-.nav-link:hover{
-
-color:#38BDF8 !important;
-
+.stage-info strong {
+    display: block;
 }
 
-.hero{
-    min-height:88vh;
-    display:flex;
-    align-items:center;
-    padding:20px 0 60px;
-}
-.hero h1{
+.stage-info small {
+    display: block;
 
-line-height:1.2;
+    margin-top: 3px;
 
+    color: #9ca3af;
+
+    font-size: 12px;
 }
 
-.hero p{
 
-font-size:20px;
+/* BUTTON */
 
-color:#CBD5E1;
+.stage-button {
+    min-width: 115px;
 
+    padding: 8px 15px;
+
+    border-radius: 6px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    background: #3b82f6;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 600;
 }
 
-.hero-buttons{
-
-margin-top:40px;
-
+.stage-button:hover {
+    color: white;
+    background: #2563eb;
 }
 
-.hero-buttons .btn{
 
-padding:14px 35px;
+/* LOCKED */
 
-margin-right:15px;
-
-border-radius:12px;
-
-font-size:18px;
-
+.stage-row.locked {
+    opacity: 0.55;
 }
 
-.btn-primary{
+.stage-row.locked .stage-button {
+    background: #6b7280;
 
-background:linear-gradient(90deg,#3B82F6,#8B5CF6);
-
-border:none;
-
+    cursor: not-allowed;
 }
 
-.btn-primary:hover{
 
-transform:translateY(-3px);
+/* COMPLETED */
 
-transition:.3s;
+.stage-row.completed {
+    border-color: rgba(34,197,94,0.35);
 
+    background: rgba(34,197,94,0.06);
 }
 
-/* ================= DASHBOARD ================= */
-
-.dashboard-card{
-
-background:#162033;
-
-padding:35px;
-
-border-radius:25px;
-
-width:100%;
-
-max-width:700px;
-
-margin:auto;
-
-}
-.dashboard-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:30px;
-
+.stage-row.completed .stage-button {
+    background: #16a34a;
 }
 
-.dashboard-header h4{
 
-font-weight:700;
+/* PROGRESS TEXT */
 
-}
+#progressText {
+    color: #22c55e;
 
-.status{
-
-color:#22C55E;
-
-font-weight:bold;
-
-}
-
-.dashboard-grid{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:15px;
-
-}
-
-.dashboard-box{
-
-background:#1F2A40;
-
-padding:25px;
-
-border-radius:18px;
-
-text-align:center;
-
-transition:.4s;
-
-}
-
-.dashboard-box:hover{
-
-transform:translateY(-8px);
-
-box-shadow:0 15px 35px rgba(59,130,246,.35);
-
-}
-
-.dashboard-box h2{
-
-font-size:38px;
-
-font-weight:700;
-
-background:linear-gradient(90deg,#3B82F6,#8B5CF6);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-}
-
-.dashboard-box p{
-
-margin-top:8px;
-
-color:#CBD5E1;
-
-}
-
-.progress-area{
-
-margin-top:35px;
-
-}
-
-.progress{
-
-height:12px;
-
-border-radius:20px;
-
-background:#2A3448;
-
-}
-
-.progress-bar{
-
-border-radius:20px;
-
-}
-
-.tags{
-
-display:flex;
-
-flex-wrap:wrap;
-
-gap:12px;
-
-}
-
-.tags span{
-
-padding:12px 18px;
-
-background:#162033;
-
-border-radius:30px;
-
-color:#CBD5E1;
-
-font-size:15px;
-
-}
-
-.process-section{
-    padding:100px 0;
-    background:#081221;
-}
-
-.process-card{
-    background:#162033;
-    border-radius:18px;
-    padding:30px 20px;
-    transition:0.4s;
-    border:1px solid rgba(255,255,255,.05);
-}
-
-.process-card:hover{
-    transform:translateY(-10px);
-    box-shadow:0 15px 35px rgba(59,130,246,.35);
-}
-
-.process-card i{
-    font-size:40px;
-    color:#3B82F6;
-    margin-bottom:20px;
-}
-
-.process-card h5{
-    color:white;
-    font-weight:600;
-}
-
-/* ================= STATISTICS ================= */
-
-.stats-section{
-
-padding:100px 0;
-
-background:#0B1424;
-
-}
-
-.stat-card{
-
-background:#162033;
-
-padding:40px 20px;
-
-border-radius:20px;
-
-transition:.4s;
-
-border:1px solid rgba(255,255,255,.08);
-
-height:100%;
-
-}
-
-.stat-card:hover{
-
-transform:translateY(-10px);
-
-box-shadow:0 15px 40px rgba(59,130,246,.35);
-
-}
-
-.stat-card h2{
-
-font-size:48px;
-
-font-weight:700;
-
-background:linear-gradient(90deg,#3B82F6,#8B5CF6);
-
--webkit-background-clip:text;
-
--webkit-text-fill-color:transparent;
-
-margin-bottom:15px;
-
-}
-
-.stat-card p{
-
-color:#CBD5E1;
-
-font-size:18px;
-
-}
-
-/* ================= TRUSTED BY ================= */
-
-.trusted-section{
-
-padding:100px 0;
-
-background:#081221;
-
-}
-
-.company-card{
-
-background:#162033;
-
-padding:30px 20px;
-
-border-radius:20px;
-
-transition:.4s;
-
-border:1px solid rgba(255,255,255,.08);
-
-height:100%;
-
-}
-
-.company-card:hover{
-
-transform:translateY(-8px);
-
-box-shadow:0 15px 40px rgba(59,130,246,.35);
-
-}
-
-.company-card i{
-
-font-size:50px;
-
-margin-bottom:20px;
-
-color:#3B82F6;
-
-}
-
-.company-card h5{
-
-color:white;
-
-font-weight:600;
-
-margin:0;
-
-}
-
-/* ================= REGISTER ================= */
-
-.register-container{
-
-min-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:#081221;
-
-}
-
-.register-card{
-
-width:420px;
-
-background:#162033;
-
-padding:40px;
-
-border-radius:20px;
-
-box-shadow:0 20px 60px rgba(0,0,0,.35);
-
-border:1px solid rgba(255,255,255,.08);
-
-}
-
-.register-icon{
-
-font-size:60px;
-
-color:#3B82F6;
-
-margin-bottom:20px;
-
-}
-
-.form-control{
-
-background:#1F2A40;
-
-border:none;
-
-color:white;
-
-padding:14px;
-
-}
-
-.form-control:focus{
-
-background:#26344f;
-
-color:white;
-
-box-shadow:none;
-
-border:1px solid #3B82F6;
-
-}
-
-.register-card label{
-
-margin-bottom:8px;
-
-font-weight:600;
-
-}
-
-.register-card p{
-
-color:#CBD5E1;
-
-}
-.dashboard-container{
-    background:#08111f;
-    min-height:100vh;
-    padding-top:40px;
-}
-
-.dashboard-card{
-    background:#1b2437;
-    color:white;
-    border-radius:15px;
-    padding:25px;
-    box-shadow:0 0 20px rgba(0,0,0,.4);
-    margin-bottom:20px;
-}
-
-.dashboard-card h4{
-    color:#4d8cff;
+    font-weight: 700;
 }

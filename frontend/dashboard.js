@@ -1,264 +1,326 @@
-console.log("dashboard.js loaded");
+// =====================================
+// DASHBOARD
+// =====================================
+
+const candidateId =
+    localStorage.getItem("candidate_id");
 
 
-document.addEventListener("DOMContentLoaded", async function () {
+// =====================================
+// LOGIN CHECK
+// =====================================
+
+if (!candidateId) {
+
+    alert("Please login first.");
+
+    window.location.href =
+        "login.html";
+}
 
 
-    // =========================
-    // GET CANDIDATE ID
-    // =========================
+// =====================================
+// LOAD CANDIDATE PROFILE
+// =====================================
 
-    const candidateId =
-        localStorage.getItem("candidate_id");
+async function loadCandidate() {
+
+    try {
+
+        const response =
+            await fetch(
+                `http://127.0.0.1:8000/candidate/${candidateId}`
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                "Unable to load candidate."
+            );
+        }
 
 
-    console.log(
-        "Candidate ID:",
-        candidateId
+        // Candidate Name
+
+        const nameElement =
+            document.getElementById(
+                "candidateName"
+            );
+
+        if (nameElement) {
+            nameElement.innerText =
+                data.name;
+        }
+
+
+        // Candidate Email
+
+        const emailElement =
+            document.getElementById(
+                "candidateEmail"
+            );
+
+        if (emailElement) {
+            emailElement.innerText =
+                data.email;
+        }
+
+
+        // Candidate Phone
+
+        const phoneElement =
+            document.getElementById(
+                "candidatePhone"
+            );
+
+        if (phoneElement) {
+            phoneElement.innerText =
+                data.phone;
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Candidate loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+// =====================================
+// RECRUITMENT STAGES
+// =====================================
+
+const stages = [
+
+    "resume",
+    "ats",
+    "aptitude",
+    "technical",
+    "communication",
+    "hr",
+    "selection",
+    "offer",
+    "onboarding"
+
+];
+
+
+
+// =====================================
+// CHECK COMPLETED STAGE
+// =====================================
+
+function isCompleted(stage) {
+
+    return (
+        localStorage.getItem(
+            "stage_" + stage
+        ) === "completed"
+    );
+
+}
+
+
+
+// =====================================
+// UPDATE RECRUITMENT PROGRESS
+// =====================================
+
+function updateRecruitmentProgress() {
+
+    let completedCount = 0;
+
+
+    stages.forEach(
+        function(stage, index) {
+
+            const row =
+                document.getElementById(
+                    "stage-" + stage
+                );
+
+            const button =
+                document.getElementById(
+                    stage + "Button"
+                );
+
+
+            if (!row || !button) {
+                return;
+            }
+
+
+            // =================================
+            // CHECK COMPLETION
+            // =================================
+
+            const completed =
+                isCompleted(stage);
+
+
+            if (completed) {
+
+                completedCount++;
+
+
+                row.classList.remove(
+                    "locked"
+                );
+
+                row.classList.add(
+                    "completed"
+                );
+
+
+                button.innerText =
+                    "✓ Completed";
+
+                button.style.background =
+                    "#16a34a";
+
+
+                button.onclick = null;
+
+                return;
+
+            }
+
+
+            // =================================
+            // CHECK PREVIOUS STAGE
+            // =================================
+
+            const previousStage =
+                index > 0
+                    ? stages[index - 1]
+                    : null;
+
+
+            const unlocked =
+                index === 0 ||
+                isCompleted(previousStage);
+
+
+            // =================================
+            // UNLOCK CURRENT STAGE
+            // =================================
+
+            if (unlocked) {
+
+                row.classList.remove(
+                    "locked"
+                );
+
+
+                button.innerText =
+                    "Start";
+
+
+                button.style.background =
+                    "#3b82f6";
+
+
+                button.onclick = null;
+
+            }
+
+
+            // =================================
+            // LOCK FUTURE STAGE
+            // =================================
+
+            else {
+
+                row.classList.add(
+                    "locked"
+                );
+
+
+                button.innerText =
+                    "🔒 Locked";
+
+
+                button.style.background =
+                    "#6b7280";
+
+
+                button.onclick =
+                    function(event) {
+
+                        event.preventDefault();
+
+                        alert(
+                            "Please complete the previous recruitment stage first."
+                        );
+
+                    };
+
+            }
+
+        }
     );
 
 
-    if (!candidateId) {
+    // =================================
+    // CALCULATE PROGRESS
+    // =================================
 
-        alert(
-            "Please login first."
+    const percentage =
+        Math.round(
+            (
+                completedCount /
+                stages.length
+            ) * 100
         );
 
-        window.location.href =
-            "login.html";
 
-        return;
+    // Progress Bar
+
+    const progressBar =
+        document.getElementById(
+            "progressBar"
+        );
+
+
+    if (progressBar) {
+
+        progressBar.style.width =
+            percentage + "%";
 
     }
 
 
+    // Progress Text
 
-    // =========================
-    // GET CANDIDATE DETAILS
-    // =========================
-
-    try {
-
-        const response = await fetch(
-            `http://127.0.0.1:8000/candidate/${candidateId}`
+    const progressText =
+        document.getElementById(
+            "progressText"
         );
 
 
-        console.log(
-            "Candidate response:",
-            response.status
-        );
+    if (progressText) {
 
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Unable to load candidate details"
-            );
-
-        }
-
-
-        const candidate =
-            await response.json();
-
-
-        console.log(
-            "Candidate:",
-            candidate
-        );
-
-
-        document.getElementById(
-            "candidateName"
-        ).textContent =
-            candidate.name;
-
-
-        document.getElementById(
-            "candidateEmail"
-        ).textContent =
-            candidate.email;
-
-
-        document.getElementById(
-            "candidatePhone"
-        ).textContent =
-            candidate.phone;
-
+        progressText.innerText =
+            percentage + "%";
 
     }
 
-    catch (error) {
+}
 
-        console.error(
-            "Candidate error:",
-            error
-        );
 
-    }
 
-
-
-    // =========================
-    // GET RESUME
-    // =========================
-
-    try {
-
-        const response = await fetch(
-            `http://127.0.0.1:8000/resume/${candidateId}`
-        );
-
-
-        console.log(
-            "Resume response:",
-            response.status
-        );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Unable to load resume"
-            );
-
-        }
-
-
-        const resume =
-            await response.json();
-
-
-        console.log(
-            "Resume:",
-            resume
-        );
-
-
-        // =========================
-        // NO RESUME
-        // =========================
-
-        if (!resume.resume_uploaded) {
-
-            document.getElementById(
-                "resumeNotUploaded"
-            ).style.display = "block";
-
-
-            document.getElementById(
-                "resumeUploaded"
-            ).style.display = "none";
-
-
-            return;
-
-        }
-
-
-
-        // =========================
-        // RESUME EXISTS
-        // =========================
-
-        document.getElementById(
-            "resumeNotUploaded"
-        ).style.display = "none";
-
-
-        document.getElementById(
-            "resumeUploaded"
-        ).style.display = "block";
-
-
-
-        // Filename
-
-        document.getElementById(
-            "resumeFilename"
-        ).textContent =
-            resume.filename;
-
-
-
-        // Match percentage
-
-        document.getElementById(
-            "matchPercentage"
-        ).textContent =
-            resume.match_percentage + "%";
-
-
-
-        // =========================
-        // SKILLS
-        // =========================
-
-        const skillsList =
-            document.getElementById(
-                "skillsList"
-            );
-
-
-        skillsList.innerHTML = "";
-
-
-        if (
-            resume.skills &&
-            resume.skills.length > 0
-        ) {
-
-            resume.skills.forEach(
-                function (skill) {
-
-                    const badge =
-                        document.createElement("span");
-
-
-                    badge.className =
-                        "badge bg-primary me-2 mb-2";
-
-
-                    badge.textContent =
-                        skill;
-
-
-                    skillsList.appendChild(
-                        badge
-                    );
-
-                }
-            );
-
-        }
-
-        else {
-
-            skillsList.innerHTML =
-                "<p>No skills detected.</p>";
-
-        }
-
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Resume error:",
-            error
-        );
-
-    }
-
-});
-
-
-
-// =========================
+// =====================================
 // LOGOUT
-// =========================
+// =====================================
 
 function logout() {
 
@@ -266,8 +328,24 @@ function logout() {
         "candidate_id"
     );
 
-
     window.location.href =
         "login.html";
 
 }
+
+
+
+// =====================================
+// INITIALIZE DASHBOARD
+// =====================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadCandidate();
+
+        updateRecruitmentProgress();
+
+    }
+);

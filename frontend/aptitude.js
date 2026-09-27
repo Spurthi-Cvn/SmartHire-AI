@@ -235,10 +235,28 @@ function finishTest() {
 
     nextBtn.style.display = "none";
 
-    const percentage =
-        Math.round(
-            (score / questions.length) * 100
-        );
+   const percentage = Math.round(
+    (score / questions.length) * 100
+);
+
+// =====================================
+// MARK APTITUDE STAGE AS COMPLETED
+// =====================================
+
+if (percentage >= 60) {
+
+    localStorage.setItem(
+        "stage_aptitude",
+        "completed"
+    );
+
+} else {
+
+    localStorage.removeItem(
+        "stage_aptitude"
+    );
+
+}
 
 
     scoreText.innerText =

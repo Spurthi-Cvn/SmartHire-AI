@@ -5,374 +5,361 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard | ASHHH Technologies</title>
-
-
-    <!-- Bootstrap -->
+    <title>AI Recruitment Platform</title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
-
-
-    <!-- Font Awesome -->
-
-    <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        rel="stylesheet">
-
-
-    <!-- Your CSS -->
+        rel="stylesheet"
+    >
 
     <link
         rel="stylesheet"
-        href="style.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- YOUR CSS -->
+    <link rel="stylesheet" href="style.css">
 
 </head>
-
-
 <body>
+<!-- =====================================
+     RECRUITMENT PROGRESS
+===================================== -->
+
+<div class="dashboard-card" id="recruitmentProgress">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center">
+
+        <h3>
+            <i class="fa-solid fa-chart-line"></i>
+            Recruitment Progress
+        </h3>
+
+        <span id="progressText">0%</span>
+
+    </div>
+
+    <hr>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress mb-4" style="height: 12px;">
+
+        <div
+            id="progressBar"
+            class="progress-bar bg-success"
+            role="progressbar"
+            style="width: 0%;"
+        ></div>
+
+    </div>
 
 
-<div class="dashboard-container">
+    <!-- =================================
+         RECRUITMENT STAGES
+    ================================= -->
 
-    <div class="container py-5">
-
-
-        <!-- HEADER -->
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-
-            <h2 class="text-white">
-
-                <i class="fa-solid fa-user"></i>
-
-                Candidate Dashboard
-
-            </h2>
+    <div class="recruitment-stages">
 
 
-            <button
-                class="btn btn-danger"
-                onclick="logout()">
+        <!-- 1. RESUME UPLOAD -->
 
-                <i class="fa-solid fa-right-from-bracket"></i>
+        <div
+            id="stage-resume"
+            class="stage-row"
+        >
 
-                Logout
+            <div class="stage-info">
 
-            </button>
+                <span class="stage-icon">📄</span>
 
-        </div>
+                <div>
+                    <strong>Resume Upload</strong>
 
-
-
-        <div class="row">
-
-
-            <!-- ================= PROFILE ================= -->
-
-            <div class="col-md-4">
-
-                <div class="dashboard-card">
-
-                    <h4>
-                        <i class="fa-solid fa-user me-2"></i>
-                        Your Profile
-                    </h4>
-
-                    <hr>
-
-
-                    <p>
-
-                        <strong>Name:</strong>
-
-                        <span id="candidateName">
-                            Loading...
-                        </span>
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>Email:</strong>
-
-                        <span id="candidateEmail">
-                            Loading...
-                        </span>
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>Phone:</strong>
-
-                        <span id="candidatePhone">
-                            Loading...
-                        </span>
-
-                    </p>
-
+                    <small>
+                        Upload your latest resume
+                    </small>
                 </div>
 
             </div>
 
+            <a
+                href="upload_resume.html"
+                id="resumeButton"
+                class="stage-button"
+            >
+                Start
+            </a>
+
+        </div>
 
 
-            <!-- ================= MAIN ================= -->
+        <!-- 2. ATS SCREENING -->
 
-            <div class="col-md-8">
+        <div
+            id="stage-ats"
+            class="stage-row locked"
+        >
 
+            <div class="stage-info">
 
-                <!-- RECRUITMENT PROGRESS -->
+                <span class="stage-icon">🤖</span>
 
-                <div class="dashboard-card mb-4">
+                <div>
+                    <strong>ATS Screening</strong>
 
-                    <h4>
-
-                        <i class="fa-solid fa-chart-line me-2"></i>
-
-                        Recruitment Progress
-
-                    </h4>
-
-                    <hr>
-
-
-                    <div class="progress mb-4">
-
-                        <div
-                            class="progress-bar bg-success"
-                            style="width:20%;">
-
-                            20%
-
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="d-grid gap-3">
-
-
-                        <!-- Resume -->
-
-                        <a
-                            href="upload_resume.html"
-                            class="btn btn-primary">
-
-                            <i class="fa-solid fa-file-arrow-up me-2"></i>
-
-                            Upload Resume
-
-                        </a>
-
-
-                        <!-- ATS -->
-
-                        <a href="ats_screening.html" 
-                        class="btn btn-secondary">
-
-                        🤖 ATS Screening
-
-                        </a>
-
-
-                        <!-- Aptitude -->
-                        <a href="aptitude.html" 
-                        class="btn btn-primary">
-
-                          🧠 Aptitude Test
-
-                        </a>
-
-
-                        <!-- Technical -->
-
-                        <a
-                            href="#"
-                            class="btn btn-secondary">
-
-                            <i class="fa-solid fa-code me-2"></i>
-
-                            Technical Interview
-
-                        </a>
-
-
-                        <!-- Communication -->
-
-                        <a
-                            href="#"
-                            class="btn btn-secondary">
-
-                            <i class="fa-solid fa-comments me-2"></i>
-
-                            Communication Round
-
-                        </a>
-
-
-                        <!-- HR -->
-
-                        <a
-                            href="#"
-                            class="btn btn-secondary">
-
-                            <i class="fa-solid fa-user-tie me-2"></i>
-
-                            HR Interview
-
-                        </a>
-
-
-                        <!-- Offer -->
-
-                        <a
-                            href="#"
-                            class="btn btn-success">
-
-                            <i class="fa-solid fa-file-signature me-2"></i>
-
-                            Offer Letter
-
-                        </a>
-
-                    </div>
-
+                    <small>
+                        Resume skill assessment
+                    </small>
                 </div>
-
-
-
-                <!-- ================= RESUME ================= -->
-
-                <div class="dashboard-card">
-
-                    <h4>
-
-                        <i class="fa-solid fa-file-lines me-2"></i>
-
-                        Resume Status
-
-                    </h4>
-
-                    <hr>
-
-
-                    <!-- Not uploaded -->
-
-                    <div
-                        id="resumeNotUploaded">
-
-                        <p class="text-warning">
-
-                            <i class="fa-solid fa-circle-exclamation me-2"></i>
-
-                            Resume not uploaded yet.
-
-                        </p>
-
-
-                        <a
-                            href="upload_resume.html"
-                            class="btn btn-primary">
-
-                            Upload Resume
-
-                        </a>
-
-                    </div>
-
-
-
-                    <!-- Uploaded -->
-
-                    <div
-                        id="resumeUploaded"
-                        style="display:none;">
-
-
-                        <p>
-
-                            <strong>Resume:</strong>
-
-                            <span id="resumeFilename">
-                                -
-                            </span>
-
-                        </p>
-
-
-                        <p>
-
-                            <strong>Skill Match:</strong>
-
-                            <span
-                                id="matchPercentage"
-                                class="badge bg-success">
-
-                                -
-
-                            </span>
-
-                        </p>
-
-
-                        <h5 class="mt-4">
-
-                            <i class="fa-solid fa-star me-2"></i>
-
-                            Skills Detected
-
-                        </h5>
-
-
-                        <div
-                            id="skillsList"
-                            class="mt-3">
-
-                        </div>
-
-
-                        <div class="mt-4">
-
-                            <a
-                                href="upload_resume.html"
-                                class="btn btn-outline-primary">
-
-                                <i class="fa-solid fa-upload me-2"></i>
-
-                                Upload New Resume
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-
-                </div>
-
 
             </div>
 
+            <a
+                href="ats_screening.html"
+                id="atsButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
         </div>
+
+
+        <!-- 3. APTITUDE TEST -->
+
+        <div
+            id="stage-aptitude"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">🧠</span>
+
+                <div>
+                    <strong>Aptitude Test</strong>
+
+                    <small>
+                        Logical and analytical assessment
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="aptitude.html"
+                id="aptitudeButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
+
+        <!-- 4. TECHNICAL INTERVIEW -->
+
+        <div
+            id="stage-technical"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">💻</span>
+
+                <div>
+                    <strong>Technical Interview</strong>
+
+                    <small>
+                        Technical skills assessment
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="technical.html"
+                id="technicalButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
+
+        <!-- 5. COMMUNICATION ROUND -->
+
+        <div
+            id="stage-communication"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">💬</span>
+
+                <div>
+                    <strong>Communication Round</strong>
+
+                    <small>
+                        Professional communication assessment
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="communication.html"
+                id="communicationButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
+
+        <!-- 6. HR INTERVIEW -->
+
+        <div
+            id="stage-hr"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">👔</span>
+
+                <div>
+                    <strong>HR Interview</strong>
+
+                    <small>
+                        Behavioral and HR assessment
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="hr.html"
+                id="hrButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
+
+        <!-- 7. SELECTION STATUS -->
+
+        <div
+            id="stage-selection"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">🏆</span>
+
+                <div>
+                    <strong>Selection Status</strong>
+
+                    <small>
+                        Final recruitment decision
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="selection.html"
+                id="selectionButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
+
+        <!-- 8. OFFER LETTER -->
+
+        <div
+            id="stage-offer"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">📄</span>
+
+                <div>
+                    <strong>Offer Letter</strong>
+
+                    <small>
+                        Employment offer
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="offer.html"
+                id="offerButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
+
+        <!-- 9. EMPLOYEE ONBOARDING -->
+
+        <div
+            id="stage-onboarding"
+            class="stage-row locked"
+        >
+
+            <div class="stage-info">
+
+                <span class="stage-icon">🏢</span>
+
+                <div>
+                    <strong>Employee Onboarding</strong>
+
+                    <small>
+                        Complete joining formalities
+                    </small>
+                </div>
+
+            </div>
+
+            <a
+                href="onboarding.html"
+                id="onboardingButton"
+                class="stage-button"
+            >
+                🔒 Locked
+            </a>
+
+        </div>
+
 
     </div>
 
 </div>
+    <!-- =====================================
+         DASHBOARD JAVASCRIPT
+    ===================================== -->
 
-
-
-<script src="dashboard.js"></script>
-
+    <script src="dashboard.js"></script>
 
 </body>
 

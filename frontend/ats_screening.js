@@ -103,12 +103,29 @@ async function runATSScreening() {
             !candidateSkills.includes(skill.toLowerCase())
         );
 
-
-        // Calculate ATS percentage
         const percentage = Math.round(
             (matched.length / required.length) * 100
         );
 
+
+        // =====================================
+        // MARK ATS STAGE AS COMPLETED
+        // =====================================
+
+        if (percentage >= 70) {
+
+            localStorage.setItem(
+                "stage_ats",
+                "completed"
+            );
+
+        } else {
+
+            localStorage.removeItem(
+                "stage_ats"
+            );
+
+        }
 
         // Hide loading
         loading.style.display = "none";

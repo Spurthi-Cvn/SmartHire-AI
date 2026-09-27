@@ -140,10 +140,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+                alert(data.message);
 
-            alert(
-                data.message
-            );
+                localStorage.setItem(
+                    "stage_resume",
+                    "completed"
+                );
+
+                window.location.href = "dashboard.html";
 
 
             console.log(
@@ -165,6 +169,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // Go to dashboard
+            localStorage.setItem(
+                "stage_resume",
+                "completed"
+            );
 
             window.location.href =
                 "dashboard.html";
