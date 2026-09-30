@@ -2,19 +2,15 @@
 // JOINING FORMALITIES
 // =====================================
 
-const candidateId =
-    localStorage.getItem("candidate_id");
+const candidateId = localStorage.getItem("candidate_id");
 
 // =====================================
 // LOGIN CHECK
 // =====================================
 
 if (!candidateId) {
-
     alert("Candidate ID not found. Please login again.");
-
     window.location.href = "login.html";
-
 }
 
 
@@ -32,56 +28,30 @@ async function loadCandidate() {
 
         const data = await response.json();
 
-        console.log("Candidate data:", data);
-
-
         if (!response.ok) {
-
-            throw new Error(
-                data.message || "Unable to load candidate."
-            );
-
+            throw new Error("Unable to load candidate.");
         }
 
-
-        // ==============================
-        // CANDIDATE NAME
-        // ==============================
-
+        // Candidate Name
         const nameElement =
             document.getElementById("candidateName");
 
         if (nameElement) {
-
-            nameElement.innerText =
-                data.name;
-
+            nameElement.innerText = data.name;
         }
 
 
-        // ==============================
-        // CANDIDATE ID
-        // ==============================
-
+        // Candidate ID
         const idElement =
             document.getElementById("candidateId");
 
         if (idElement) {
-
             idElement.innerText =
                 "SH-2026-" +
                 String(candidateId).padStart(4, "0");
-
         }
 
-
-        console.log(
-            "Candidate details loaded successfully."
-        );
-
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(
             "Candidate loading error:",
@@ -94,72 +64,129 @@ async function loadCandidate() {
         const idElement =
             document.getElementById("candidateId");
 
-
         if (nameElement) {
-
-            nameElement.innerText =
-                "Unable to load";
-
+            nameElement.innerText = "Unable to load";
         }
 
         if (idElement) {
+            idElement.innerText = "Unable to load";
+        }
+    }
+}
 
-            idElement.innerText =
-                "Unable to load";
 
+// =====================================
+// INITIALIZE JOINING BUTTON
+// =====================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        // Find checkbox automatically
+        // No need to depend on a specific checkbox ID
+
+        const confirmationCheckbox =
+            document.querySelector(
+                'input[type="checkbox"]'
+            );
+
+
+        const completeBtn =
+            document.getElementById(
+                "completeJoiningBtn"
+            );
+
+
+        // CHECKBOX NOT FOUND
+        if (!confirmationCheckbox) {
+
+            alert(
+                "Joining confirmation checkbox not found."
+            );
+
+            return;
         }
 
-    }
 
-}
+        // BUTTON NOT FOUND
+        if (!completeBtn) {
+
+            alert(
+                "Complete Joining button not found."
+            );
+
+            return;
+        }
 
 
-// =====================================
-// COMPLETE JOINING FORMALITIES
-// =====================================
+        // =====================================
+        // BUTTON STATE
+        // =====================================
 
-function completeJoiningFormalities() {
+        function updateButton() {
 
-    const confirmation =
-        document.getElementById(
-            "joiningConfirmation"
+            completeBtn.disabled =
+                !confirmationCheckbox.checked;
+        }
+
+
+        updateButton();
+
+
+        // =====================================
+        // CHECKBOX CHANGE
+        // =====================================
+
+        confirmationCheckbox.addEventListener(
+            "change",
+            updateButton
         );
 
 
-    if (!confirmation.checked) {
+        // =====================================
+        // COMPLETE JOINING
+        // =====================================
 
-        alert(
-            "Please confirm that you are ready to complete the joining formalities."
+        completeBtn.addEventListener(
+            "click",
+            function () {
+
+                if (!confirmationCheckbox.checked) {
+
+                    alert(
+                        "Please confirm the joining declaration first."
+                    );
+
+                    return;
+                }
+
+
+                // Store completion
+                localStorage.setItem(
+                    "joining_formalities",
+                    "completed"
+                );
+
+                localStorage.setItem(
+                    "stage_onboarding",
+                    "completed"
+                );
+
+
+                alert(
+                    "Joining formalities completed successfully."
+                );
+
+
+                // Go to joining letter
+                window.location.href =
+                    "joining-letter.html";
+            }
         );
 
-        return;
-
     }
-
-
-    localStorage.setItem(
-        "stage_onboarding",
-        "completed"
-    );
-
-
-    localStorage.setItem(
-        "joining_formalities",
-        "completed"
-    );
-
-
-    alert(
-        "Joining formalities completed successfully."
-    );
-
-
-    // Move to Joining Letter
-
-    window.location.href =
-        "joining-letter.html";
-
-}
+);
 
 
 // =====================================

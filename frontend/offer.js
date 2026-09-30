@@ -147,28 +147,30 @@ async function loadCandidate() {
 
 function acceptOffer() {
 
-    const confirmed =
-        confirm(
-            "Are you sure you want to accept this offer?"
-        );
-
+    const confirmed = confirm(
+        "Are you sure you want to accept this offer?"
+    );
 
     if (!confirmed) {
         return;
     }
 
-
+    // Save offer acceptance
     localStorage.setItem(
         "offer_status",
         "accepted"
     );
 
+    // Mark Offer Letter stage as completed
+    localStorage.setItem(
+        "stage_offer",
+        "completed"
+    );
 
+    // Continue to Offer Accepted page
     window.location.href =
         "offer-accepted.html";
 }
-
-
 // =====================================
 // DECLINE OFFER
 // =====================================

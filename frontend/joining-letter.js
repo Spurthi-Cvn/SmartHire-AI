@@ -12,96 +12,117 @@ const candidateId =
 
 if (!candidateId) {
 
-    alert("Please login first.");
+    alert("Candidate ID not found. Please login again.");
 
-    window.location.href =
-        "login.html";
+    window.location.href = "login.html";
 }
 
 
 // =====================================
-// LOAD CANDIDATE
+// LOAD CANDIDATE DETAILS
 // =====================================
 
 async function loadCandidate() {
 
     try {
 
-        const response =
-            await fetch(
-                `http://127.0.0.1:8000/candidate/${candidateId}`
-            );
+        const response = await fetch(
+            `http://127.0.0.1:8000/candidate/${candidateId}`
+        );
 
-        const data =
-            await response.json();
+        const data = await response.json();
 
 
         if (!response.ok) {
-
-            throw new Error(
-                "Unable to load candidate."
-            );
-
+            throw new Error("Unable to load candidate.");
         }
 
 
-        // Candidate Name
+        // =====================================
+        // CANDIDATE NAME
+        // =====================================
 
-        document.getElementById(
-            "candidateName"
-        ).innerText =
-            data.name;
+        const candidateName =
+            document.getElementById("candidateName");
 
+        if (candidateName) {
 
-        // Candidate ID
-
-        document.getElementById(
-            "candidateId"
-        ).innerText =
-            "SH-2026-" +
-            String(candidateId)
-                .padStart(4, "0");
+            candidateName.innerText =
+                data.name;
+        }
 
 
-        // Letter Date
+        // =====================================
+        // CANDIDATE ID
+        // =====================================
 
-        const today =
-            new Date();
+        const candidateIdElement =
+            document.getElementById("candidateId");
 
-        document.getElementById(
-            "letterDate"
-        ).innerText =
-            today.toLocaleDateString(
-                "en-IN",
-                {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                }
-            );
+        if (candidateIdElement) {
+
+            candidateIdElement.innerText =
+                "SH-2026-" +
+                String(candidateId).padStart(4, "0");
+        }
+
+
+        // =====================================
+        // LETTER DATE
+        // =====================================
+
+        const letterDate =
+            document.getElementById("letterDate");
+
+        if (letterDate) {
+
+            const today = new Date();
+
+            letterDate.innerText =
+                today.toLocaleDateString(
+                    "en-IN",
+                    {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+        }
 
     }
-
     catch (error) {
 
         console.error(
-            "Joining letter error:",
+            "Joining Letter Error:",
             error
         );
 
+        const candidateName =
+            document.getElementById("candidateName");
+
+        const candidateIdElement =
+            document.getElementById("candidateId");
+
+        const letterDate =
+            document.getElementById("letterDate");
+
+
+        if (candidateName) {
+            candidateName.innerText =
+                "Unable to load";
+        }
+
+        if (candidateIdElement) {
+            candidateIdElement.innerText =
+                "Unable to load";
+        }
+
+        if (letterDate) {
+            letterDate.innerText =
+                "Unable to load";
+        }
     }
-
 }
-
-
-// =====================================
-// MARK JOINING COMPLETED
-// =====================================
-
-localStorage.setItem(
-    "stage_onboarding",
-    "completed"
-);
 
 
 // =====================================
