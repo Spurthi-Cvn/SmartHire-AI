@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Form, Depends
+from fastapi import APIRouter, UploadFile, File, Form, Depends, HTTPException
 from sqlalchemy.orm import Session
 import shutil
 import os
@@ -9,6 +9,8 @@ from app.models import Candidate, Resume
 
 from app.services.resume_parser import extract_text_from_pdf
 from app.services.skill_extractor import extract_skills
+
+from app.aws_s3 import upload_file_to_s3
 
 
 router = APIRouter()
@@ -27,7 +29,7 @@ REQUIRED_SKILLS = [
 
 
 # =========================
-# UPLOAD RESUME
+# UPLOAD RESUME TO AWS S3
 # =========================
 
 @router.post("/upload-resume")
@@ -37,81 +39,135 @@ def upload_resume(
     db: Session = Depends(get_db)
 ):
 
+    # 1. Verify candidate
+
     candidate = db.query(Candidate).filter(
         Candidate.id == candidate_id
     ).first()
 
     if not candidate:
-        return {
-            "message": "Candidate not found"
-        }
+        raise HTTPException(
+            status_code=404,
+            detail="Candidate not found"
+        )
 
+    # 2. Validate file
+
+    original_filename = os.path.basename(
+        file.filename or "resume.pdf"
+    )
+
+    if not original_filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail="Only PDF resumes are allowed"
+        )
+
+    # 3. Temporarily save resume locally
 
     os.makedirs("uploads", exist_ok=True)
 
-    file_path = f"uploads/{file.filename}"
-
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-
-    resume_text = extract_text_from_pdf(file_path)
-
-    skills = extract_skills(resume_text)
-
-
-    matched_skills = [
-    skill for skill in skills
-    if skill in REQUIRED_SKILLS
-]
-
-    matched = len(matched_skills)
-
-    total_required = len(REQUIRED_SKILLS)
-
-    match_percentage = round(
-        (matched / total_required) * 100,
-        2
+    file_path = os.path.join(
+        "uploads",
+        f"candidate_{candidate_id}_{original_filename}"
     )
 
+    try:
 
-    resume = Resume(
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
 
-        candidate_id=candidate_id,
+        # 4. Extract resume text
 
-        filename=file.filename,
+        resume_text = extract_text_from_pdf(file_path)
 
-        resume_text=resume_text,
+        # 5. Extract skills
 
-        skills=json.dumps(skills),
+        skills = extract_skills(resume_text)
 
-        match_percentage=str(match_percentage)
+        # 6. Calculate ATS match percentage
 
-    )
+        matched_skills = [
+            skill for skill in skills
+            if skill in REQUIRED_SKILLS
+        ]
 
+        matched = len(matched_skills)
 
-    db.add(resume)
+        total_required = len(REQUIRED_SKILLS)
 
-    db.commit()
+        match_percentage = round(
+            (matched / total_required) * 100,
+            2
+        )
 
-    db.refresh(resume)
+        # 7. Generate S3 object key
 
+        object_key = (
+            f"resumes/candidate_{candidate_id}/"
+            f"{original_filename}"
+        )
 
-    return {
+        # 8. Upload resume to Amazon S3
 
-        "message": "Resume Uploaded Successfully",
+        upload_success = upload_file_to_s3(
+            file_path,
+            object_key
+        )
 
-        "resume_id": resume.id,
+        if not upload_success:
+            raise HTTPException(
+                status_code=500,
+                detail="Resume upload to AWS S3 failed"
+            )
 
-        "candidate_id": candidate_id,
+        # 9. Save resume details in PostgreSQL
 
-        "filename": file.filename,
+        resume = Resume(
+            candidate_id=candidate_id,
+            filename=original_filename,
+            resume_text=resume_text,
+            skills=json.dumps(skills),
+            match_percentage=str(match_percentage)
+        )
 
-        "skills": skills,
+        db.add(resume)
+        db.commit()
+        db.refresh(resume)
 
-        "match_percentage": match_percentage
+        # 10. Return response
 
-    }
+        return {
+            "message": "Resume Uploaded Successfully",
+            "storage": "Amazon S3",
+            "bucket": "smarthire-ai-resumes-2026",
+            "s3_key": object_key,
+            "resume_id": resume.id,
+            "candidate_id": candidate_id,
+            "filename": original_filename,
+            "skills": skills,
+            "matched_skills": matched_skills,
+            "match_percentage": match_percentage
+        }
+
+    except HTTPException:
+        raise
+
+    except Exception as error:
+
+        db.rollback()
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Resume processing failed: {str(error)}"
+        )
+
+    finally:
+
+        # Remove temporary local file
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
 
 # =========================
@@ -130,32 +186,29 @@ def get_resume(
         Resume.id.desc()
     ).first()
 
-
     if not resume:
-
         return {
             "resume_uploaded": False
         }
 
-
     try:
         skills = json.loads(resume.skills)
-    except:
+    except (TypeError, json.JSONDecodeError):
         skills = []
 
+    object_key = (
+        f"resumes/candidate_{candidate_id}/"
+        f"{resume.filename}"
+    )
 
     return {
-
         "resume_uploaded": True,
-
         "resume_id": resume.id,
-
         "candidate_id": resume.candidate_id,
-
         "filename": resume.filename,
-
+        "storage": "Amazon S3",
+        "s3_key": object_key,
         "skills": skills,
-
         "match_percentage": resume.match_percentage
-
     }
+    
