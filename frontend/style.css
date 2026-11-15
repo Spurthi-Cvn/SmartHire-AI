@@ -125,3 +125,72 @@
 
     font-weight: 700;
 }
+
+/* =====================================
+   REGISTRATION PAGE
+===================================== */
+
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 15px;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+}
+
+.register-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.register-icon {
+    font-size: 42px;
+    color: #2563eb;
+    margin-bottom: 15px;
+}
+
+.register-card h2 {
+    font-weight: 700;
+    color: #172554;
+}
+
+.register-card p {
+    color: #64748b;
+}
+
+.register-card label {
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: #334155;
+}
+
+.register-card .form-control {
+    padding: 11px 13px;
+    border-radius: 8px;
+}
+
+.register-card .btn-primary {
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #2563eb;
+    border: none;
+}
+
+.register-card .btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.register-card a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.register-card a:hover {
+    text-decoration: underline;
+}

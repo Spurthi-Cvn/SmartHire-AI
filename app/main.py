@@ -13,6 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers.selection import router as selection_router
 from app.routers.offer import router as offer_router
 from app.routers.joining import router as joining_router
+from app.routers.progress import router as progress_router
+
 
 
 
@@ -23,9 +25,14 @@ app = FastAPI(
     title="AI Recruitment Platform"
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500"],
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -42,6 +49,7 @@ app.include_router(hr_router)
 app.include_router(selection_router)
 app.include_router(offer_router)
 app.include_router(joining_router)
+app.include_router(progress_router)
 
 @app.get("/")
 def home():

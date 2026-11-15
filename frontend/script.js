@@ -1,4 +1,9 @@
-console.log("script.js loaded");
+console.log("SmartHire AI script.js loaded");
+
+// ================= API CONFIGURATION =================
+
+const API_BASE_URL = "http://127.0.0.1:8000";
+
 
 // ================= REGISTER =================
 
@@ -9,32 +14,25 @@ if (form) {
     console.log("Register page detected");
 
     const loading = document.getElementById("loading");
-
-    const nameInput = document.getElementById("name");
-    const emailInput = document.getElementById("email");
-    const phoneInput = document.getElementById("phone");
-    const passwordInput = document.getElementById("password");
+    const registerButton = form.querySelector('button[type="submit"]');
 
     form.addEventListener("submit", async function (e) {
 
         e.preventDefault();
 
-        console.log("Register button clicked");
-
         loading.style.display = "block";
+        registerButton.disabled = true;
 
         const candidate = {
-            name: nameInput.value,
-            email: emailInput.value,
-            phone: phoneInput.value,
-            password: passwordInput.value
+            name: document.getElementById("name").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            password: document.getElementById("password").value
         };
-
-        console.log(candidate);
 
         try {
 
-            const response = await fetch("http://127.0.0.1:8000/register", {
+            const response = await fetch(`${API_BASE_URL}/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -42,15 +40,15 @@ if (form) {
                 body: JSON.stringify(candidate)
             });
 
-            console.log("Response Status:", response.status);
-
             const data = await response.json();
 
-            console.log(data);
+            if (!response.ok) {
+                throw new Error(
+                    data.detail || data.message || "Registration failed"
+                );
+            }
 
-            loading.style.display = "none";
-
-            alert(data.message);
+            alert(data.message || "Registration successful!");
 
             form.reset();
 
@@ -58,11 +56,14 @@ if (form) {
 
         } catch (error) {
 
-            loading.style.display = "none";
-
-            console.error(error);
+            console.error("Registration error:", error);
 
             alert("Registration Failed: " + error.message);
+
+        } finally {
+
+            loading.style.display = "none";
+            registerButton.disabled = false;
 
         }
 
@@ -80,25 +81,23 @@ if (loginForm) {
     console.log("Login page detected");
 
     const loginLoading = document.getElementById("loginLoading");
+    const loginButton = loginForm.querySelector('button[type="submit"]');
 
     loginForm.addEventListener("submit", async function (e) {
 
         e.preventDefault();
 
-        console.log("Login button clicked");
-
         loginLoading.style.display = "block";
+        loginButton.disabled = true;
 
         const user = {
-            email: document.getElementById("loginEmail").value,
+            email: document.getElementById("loginEmail").value.trim(),
             password: document.getElementById("loginPassword").value
         };
 
-        console.log(user);
-
         try {
 
-            const response = await fetch("http://127.0.0.1:8000/login", {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -106,31 +105,31 @@ if (loginForm) {
                 body: JSON.stringify(user)
             });
 
-            console.log("Response Status:", response.status);
-
             const data = await response.json();
 
-            console.log(data);
-
-            loginLoading.style.display = "none";
-
-            alert(data.message);
-
-            if (data.candidate_id) {
-
-                localStorage.setItem("candidate_id", data.candidate_id);
-
-                window.location.href = "dashboard.html";
-
+            if (!response.ok || !data.candidate_id) {
+                throw new Error(
+                    data.detail || data.message || "Invalid login credentials"
+                );
             }
+
+            // Store candidate information
+            localStorage.setItem("candidate_id", data.candidate_id);
+
+            alert("Login successful!");
+
+            window.location.href = "dashboard.html";
 
         } catch (error) {
 
-            loginLoading.style.display = "none";
-
-            console.error(error);
+            console.error("Login error:", error);
 
             alert("Login Failed: " + error.message);
+
+        } finally {
+
+            loginLoading.style.display = "none";
+            loginButton.disabled = false;
 
         }
 

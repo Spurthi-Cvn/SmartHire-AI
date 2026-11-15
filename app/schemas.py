@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Dict
 
 from typing import Dict
 
@@ -14,7 +16,8 @@ class CommunicationAnswers(BaseModel):
     answers: dict
 
 class AptitudeAnswers(BaseModel):
-    answers: dict
+    candidate_id: int
+    answers: Dict[str, str] = Field(..., min_length=1)
 
 class CandidateCreate(BaseModel):
     name: str
