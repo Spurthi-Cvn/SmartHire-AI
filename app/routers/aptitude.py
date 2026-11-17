@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 import json
 
 from app.schemas import AptitudeAnswers
-from app.models import Candidate, AptitudeResult
+from app.models import Candidate, AptitudeResult, RecruitmentProgress
 from app.database import get_db
 from app.services.email_service import send_aptitude_result_email
 
@@ -129,7 +129,8 @@ def submit_aptitude(
             status_code=404,
             detail="Candidate not found"
         )
-        # Validate submitted answers
+
+    # Step 2: Validate submitted questions
 
     expected_question_ids = {
         str(i) for i in range(1, 11)
@@ -142,6 +143,8 @@ def submit_aptitude(
             status_code=400,
             detail="Please answer all 10 questions."
         )
+
+    # Step 3: Validate options
 
     valid_options = {
         "1": ["Compute Service", "Database Service", "Storage Service", "Networking Service"],
@@ -157,13 +160,14 @@ def submit_aptitude(
     }
 
     for question_id, answer in test.answers.items():
+
         if answer not in valid_options[question_id]:
             raise HTTPException(
                 status_code=400,
                 detail=f"Invalid answer for question {question_id}."
             )
 
-    # Step 2: Correct answers
+    # Step 4: Correct answers
 
     correct_answers = {
         "1": "Compute Service",
@@ -178,14 +182,12 @@ def submit_aptitude(
         "10": "ls"
     }
 
-    # Step 3: Calculate score
+    # Step 5: Calculate score
 
-    score = 0
-
-    for question_id, answer in test.answers.items():
-
-        if correct_answers.get(question_id) == answer:
-            score += 1
+    score = sum(
+        1 for question_id, answer in test.answers.items()
+        if correct_answers[question_id] == answer
+    )
 
     total_questions = len(correct_answers)
 
@@ -196,7 +198,7 @@ def submit_aptitude(
 
     status = "Passed" if percentage >= 60 else "Failed"
 
-    # Step 4: Save result in PostgreSQL
+    # Step 6: Save aptitude result
 
     result = AptitudeResult(
         candidate_id=candidate.id,
@@ -207,12 +209,58 @@ def submit_aptitude(
     )
 
     db.add(result)
-    db.commit()
-    db.refresh(result)
 
-        # Step 5: Send aptitude result email
+    # Step 7: Get recruitment progress
+
+    progress = db.query(RecruitmentProgress).filter(
+        RecruitmentProgress.candidate_id == candidate.id
+    ).first()
+
+    # Create progress if missing
+
+    if not progress:
+
+        progress = RecruitmentProgress(
+            candidate_id=candidate.id
+        )
+
+        db.add(progress)
+
+    # Step 8: Update recruitment progress
+
+    progress.aptitude_status = status
+
+    if status == "Passed":
+
+        progress.current_stage = "technical"
+        progress.technical_status = "Pending"
+
+    else:
+
+        progress.current_stage = "aptitude"
+        progress.technical_status = "Locked"
+
+    # Step 9: Save both records together
 
     try:
+
+        db.commit()
+
+        db.refresh(result)
+        db.refresh(progress)
+
+    except Exception:
+
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to save aptitude assessment."
+        )
+
+    # Step 10: Send result email
+
+    try:
+
         email_result = send_aptitude_result_email(
             recipient_email=candidate.email,
             candidate_name=candidate.name,
@@ -223,6 +271,7 @@ def submit_aptitude(
         )
 
     except Exception as error:
+
         print("Aptitude email error:", error)
 
         email_result = {
@@ -230,7 +279,7 @@ def submit_aptitude(
             "message": str(error)
         }
 
-    # Step 6: Return result
+    # Step 11: Return result
 
     return {
         "message": "Aptitude Assessment Completed",
@@ -241,9 +290,13 @@ def submit_aptitude(
         "total_questions": total_questions,
         "percentage": percentage,
         "status": status,
+        "next_stage": (
+            "technical" if status == "Passed"
+            else "Not eligible"
+        ),
         "email_sent": email_result.get("success", False),
         "email_message": email_result.get(
             "message",
-            "Email sent successfully"
+            "Email processing completed"
         )
     }

@@ -73,6 +73,10 @@ class AptitudeResult(Base):
 # RECRUITMENT PROGRESS MODEL
 # =====================================
 
+# =====================================
+# RECRUITMENT PROGRESS MODEL
+# =====================================
+
 class RecruitmentProgress(Base):
 
     __tablename__ = "recruitment_progress"
@@ -82,51 +86,91 @@ class RecruitmentProgress(Base):
     candidate_id = Column(
         Integer,
         ForeignKey("candidates.id"),
+        nullable=False
+    )
+
+    application_id = Column(
+        Integer,
+        ForeignKey("job_applications.id"),
         unique=True,
         nullable=False
     )
 
-    current_stage = Column(
-        String,
-        default="resume"
+    current_stage = Column(String, default="resume")
+
+    ats_status = Column(String, default="Pending")
+
+    aptitude_status = Column(String, default="Pending")
+
+    technical_status = Column(String, default="Locked")
+
+    communication_status = Column(String, default="Locked")
+
+    hr_status = Column(String, default="Locked")
+
+    selection_status = Column(String, default="Pending")
+
+    offer_status = Column(String, default="Locked")
+
+    onboarding_status = Column(String, default="Locked")
+    
+    # =====================================
+# JOB MODEL
+# =====================================
+
+class Job(Base):
+
+    __tablename__ = "jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    title = Column(String, nullable=False)
+
+    department = Column(String, nullable=False)
+
+    location = Column(String, nullable=False)
+
+    employment_type = Column(String, nullable=False)
+
+    experience = Column(String, nullable=True)
+
+    description = Column(Text, nullable=False)
+
+    required_skills = Column(Text, nullable=True)
+
+    salary_range = Column(String, nullable=True)
+
+    status = Column(String, default="Open")
+
+
+# =====================================
+# JOB APPLICATION MODEL
+# =====================================
+
+class JobApplication(Base):
+
+    __tablename__ = "job_applications"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    candidate_id = Column(
+        Integer,
+        ForeignKey("candidates.id"),
+        nullable=False
     )
 
-    ats_status = Column(
-        String,
-        default="Pending"
+    job_id = Column(
+        Integer,
+        ForeignKey("jobs.id"),
+        nullable=False
     )
 
-    aptitude_status = Column(
+    application_date = Column(
         String,
-        default="Pending"
+        nullable=False
     )
 
-    technical_status = Column(
+    application_status = Column(
         String,
-        default="Locked"
-    )
-
-    communication_status = Column(
-        String,
-        default="Locked"
-    )
-
-    hr_status = Column(
-        String,
-        default="Locked"
-    )
-
-    selection_status = Column(
-        String,
-        default="Pending"
-    )
-
-    offer_status = Column(
-        String,
-        default="Locked"
-    )
-
-    onboarding_status = Column(
-        String,
-        default="Locked"
+        default="Applied"
     )

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.routers.resume import router as resume_router
 from app.database import engine
-from app.routers.job import router as job_router
+from app.routers.jobs import router as job_router
 from app.models import Candidate, Base
 from app.routers.aptitude import router as aptitude_router
 from app.routers.shortlist import router as shortlist_router
@@ -14,6 +14,8 @@ from app.routers.selection import router as selection_router
 from app.routers.offer import router as offer_router
 from app.routers.joining import router as joining_router
 from app.routers.progress import router as progress_router
+from app.routers import selection
+from app.routers import jobs
 
 
 
@@ -39,7 +41,6 @@ app.add_middleware(
 )
 
 app.include_router(candidate_router)
-app.include_router(job_router)
 app.include_router(resume_router)   # <-- ADD THIS LINE
 app.include_router(shortlist_router)
 app.include_router(aptitude_router)
@@ -50,6 +51,8 @@ app.include_router(selection_router)
 app.include_router(offer_router)
 app.include_router(joining_router)
 app.include_router(progress_router)
+app.include_router(jobs.router)
+
 
 @app.get("/")
 def home():

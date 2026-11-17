@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Applications | SmartHire AI</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            font-family: Arial, sans-serif;
+            color: #17233d;
+        }
+
+        .app-header {
+            background: #101d3a;
+            color: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 22px;
+        }
+
+        .app-banner {
+            background: linear-gradient(120deg, #17365f, #176b85);
+            color: white;
+            padding: 45px 7%;
+        }
+
+        .app-banner h1 {
+            margin-top: 0;
+            font-size: 32px;
+        }
+
+        .app-container {
+            padding: 35px 7%;
+        }
+
+        .app-summary {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        .application-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        .application-card h3 {
+            color: #173b68;
+            margin-top: 0;
+        }
+
+        .application-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            color: #64748b;
+            font-size: 14px;
+            margin: 18px 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #fff4d6;
+            color: #986500;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .application-actions {
+            border-top: 1px solid #edf0f5;
+            padding-top: 18px;
+            margin-top: 18px;
+        }
+
+        .view-progress-btn {
+            background: #176b85;
+            color: white;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .view-progress-btn:hover {
+            background: #124d69;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 45px 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .empty-state a {
+            display: inline-block;
+            background: #176b85;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        @media(max-width: 650px) {
+            .app-header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .app-header a {
+                margin-left: 0;
+                margin-right: 12px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header class="app-header">
+
+        <h2>SmartHire AI</h2>
+
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="jobs.html">Find Jobs</a>
+            <a href="my_applications.html">My Applications</a>
+        </nav>
+
+    </header>
+
+
+    <section class="app-banner">
+
+        <h1>My Applications</h1>
+
+        <p>
+            Track your job applications and follow your recruitment journey.
+        </p>
+
+    </section>
+
+
+    <main class="app-container">
+
+        <div class="app-summary">
+
+            <h3>Application Overview</h3>
+
+            <h2 id="totalApplications">Loading...</h2>
+
+            <p>Total jobs applied</p>
+
+        </div>
+
+
+        <h2>Your Applied Jobs</h2>
+
+        <div id="applicationsList">
+
+            <p>Loading your applications...</p>
+
+        </div>
+
+    </main>
+
+
+    <script src="my_applications.js"></script>
+
+</body>
+
+</html>

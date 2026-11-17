@@ -7,13 +7,16 @@ from typing import Dict
 from typing import Dict
 
 class HRAnswers(BaseModel):
+    candidate_id: int
     answers: Dict[str, str]
-
+    
 class TechnicalAnswers(BaseModel):
+    candidate_id: int
     answers: Dict[str, str]
     
 class CommunicationAnswers(BaseModel):
-    answers: dict
+    candidate_id: int
+    answers: Dict[str, str]
 
 class AptitudeAnswers(BaseModel):
     candidate_id: int

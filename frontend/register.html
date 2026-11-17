@@ -2,130 +2,257 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | SmartHire AI</title>
 
-<title>Register | ASHHH Technologies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="auth-body">
 
-<div class="register-container">
+<div class="auth-layout">
 
-<div class="register-card">
+    <!-- LEFT BRANDING SECTION -->
 
-<div class="text-center mb-4">
+    <div class="auth-brand-panel">
 
-<i class="fa-solid fa-user-plus register-icon"></i>
+        <a href="index.html" class="auth-brand">
+            <span class="auth-brand-icon">
+                <i class="fa-solid fa-briefcase"></i>
+            </span>
+            SmartHire <span>AI</span>
+        </a>
 
-<h2>Create Account</h2>
+        <div class="auth-brand-content">
 
-<p>Start your recruitment journey with SmartHire AI</p>
+            <span class="auth-eyebrow">YOUR CAREER STARTS HERE</span>
+
+            <h1>Discover opportunities.<br>Build your future.</h1>
+
+            <p>
+                Join SmartHire AI and experience a smarter recruitment
+                journey. Apply for opportunities, complete assessments
+                and track your application in one place.
+            </p>
+
+            <div class="auth-feature">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Simple and secure registration</span>
+            </div>
+
+            <div class="auth-feature">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Track your recruitment progress</span>
+            </div>
+
+            <div class="auth-feature">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Stay updated throughout your journey</span>
+            </div>
+
+        </div>
+
+        <div class="auth-brand-footer">
+            © 2026 SmartHire AI | ASHHH Technologies
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT REGISTRATION SECTION -->
+
+    <div class="auth-form-panel">
+
+        <div class="auth-form-wrapper">
+
+            <div class="auth-mobile-brand">
+                <i class="fa-solid fa-briefcase"></i>
+                SmartHire <span>AI</span>
+            </div>
+
+            <div class="auth-heading">
+
+                <div class="auth-form-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <h2>Create your account</h2>
+
+                <p>Enter your details to get started with SmartHire AI.</p>
+
+            </div>
+
+
+            <form id="registerForm">
+
+                <div class="mb-3">
+
+                    <label for="name">Full Name</label>
+
+                    <div class="auth-input-group">
+                        <i class="fa-regular fa-user"></i>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label for="email">Email Address</label>
+
+                    <div class="auth-input-group">
+                        <i class="fa-regular fa-envelope"></i>
+
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            placeholder="Enter your email address"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    <label for="phone">Phone Number</label>
+
+                    <div class="auth-input-group">
+                        <i class="fa-solid fa-phone"></i>
+
+                        <input
+                            type="tel"
+                            class="form-control"
+                            id="phone"
+                            placeholder="Enter your phone number"
+                            autocomplete="tel"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="mb-4">
+
+                    <label for="password">Password</label>
+
+                    <div class="auth-input-group">
+                        <i class="fa-solid fa-lock"></i>
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()"
+                            aria-label="Show or hide password"
+                        >
+                            <i class="fa-regular fa-eye" id="passwordEye"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div id="loading" class="text-center mb-3" style="display:none;">
+
+                    <div class="spinner-border text-primary"></div>
+
+                    <p class="mt-2">Creating your account...</p>
+
+                </div>
+
+
+                <button type="submit" class="auth-submit-btn">
+
+                    Create Account
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+
+            <div class="auth-divider">
+                <span>ALREADY REGISTERED?</span>
+            </div>
+
+
+            <div class="auth-login-link">
+
+                Already have an account?
+
+                <a href="login.html">Sign in</a>
+
+            </div>
+
+
+            <p class="auth-terms">
+                By creating an account, you agree to our platform's
+                terms and privacy policy.
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
-<form id="registerForm">
 
-<div class="mb-3">
+<script>
 
-<label>Full Name</label>
+function togglePassword() {
 
-<input
-type="text"
-class="form-control"
-id="name"
-placeholder="Enter your name"
-required>
+    const password = document.getElementById("password");
+    const eye = document.getElementById("passwordEye");
 
-</div>
+    if (password.type === "password") {
 
-<div class="mb-3">
+        password.type = "text";
+        eye.classList.remove("fa-eye");
+        eye.classList.add("fa-eye-slash");
 
-<label>Email</label>
+    } else {
 
-<input
-type="email"
-class="form-control"
-id="email"
-placeholder="Enter email"
-required>
+        password.type = "password";
+        eye.classList.remove("fa-eye-slash");
+        eye.classList.add("fa-eye");
 
-</div>
+    }
 
-<div class="mb-3">
+}
 
-<label>Phone</label>
-
-<input
-type="text"
-class="form-control"
-id="phone"
-placeholder="Enter phone number"
-required>
-
-</div>
-
-<div class="mb-4">
-
-<label>Password</label>
-
-<input
-type="password"
-class="form-control"
-id="password"
-placeholder="Create password"
-required>
-
-</div>
-
-<div id="loading" class="text-center mb-3" style="display:none;">
-
-<div class="spinner-border text-primary"></div>
-
-<p class="mt-2">
-
-Creating your account...
-
-</p>
-
-</div>
-
-<button
-type="submit"
-class="btn btn-primary w-100">
-
-Register
-
-</button>
-
-</form>
-
-<div class="text-center mt-4">
-
-Already have an account?
-
-<a href="login.html">
-
-Login
-
-</a>
-
-</div>
-
-</div>
-
-</div>
+</script>
 
 <script src="script.js"></script>
 
 </body>
-
 </html>

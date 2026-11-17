@@ -1,399 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire AI | Candidate Dashboard</title>
 
-    <title>AI Recruitment Platform</title>
-
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
-
-    <!-- YOUR CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
 </head>
-<body>
-    <!-- =====================================
-     CANDIDATE PROFILE
-===================================== -->
 
-<div class="dashboard-card" id="candidateProfile">
+<body class="dashboard-body">
 
-    <h3>
-        <i class="fa-solid fa-user"></i>
-        Candidate Profile
-    </h3>
+<div class="app-layout">
 
-    <hr>
+    <aside class="sidebar">
+        <a href="index.html" class="brand">
+            <span class="brand-icon"><i class="fa-solid fa-briefcase"></i></span>
+            <span>SmartHire<span class="brand-ai"> AI</span></span>
+        </a>
 
-    <p>
-        <strong>Name:</strong>
-        <span id="candidateName">Loading...</span>
-    </p>
+        <div class="sidebar-label">WORKSPACE</div>
 
-    <p>
-        <strong>Email:</strong>
-        <span id="candidateEmail">Loading...</span>
-    </p>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="my_applications.html" class="nav-item">
+    <i class="fa-solid fa-file-lines"></i> My Application
+</a>
+                    <a href="jobs.html" class="nav-item">
+            <i class="fa-solid fa-magnifying-glass"></i> Find Jobs
+        </a>
+            </a>
+            <a href="#candidateProfile" class="nav-item">
+                <i class="fa-solid fa-user"></i> My Profile
+            </a>
+        </nav>
 
-    <p>
-        <strong>Phone:</strong>
-        <span id="candidatePhone">Loading...</span>
-    </p>
+        <div class="sidebar-label">ACCOUNT</div>
 
-    <button class="btn btn-danger btn-sm" onclick="logout()">
-        Logout
-    </button>
+        <nav class="sidebar-nav">
+            <a href="#help" class="nav-item">
+                <i class="fa-solid fa-circle-question"></i> Help & Support
+            </a>
+            <button class="nav-item logout-link" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </nav>
 
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-icon">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+            <strong>Need assistance?</strong>
+            <p>Our recruitment team is here to help.</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <span class="topbar-label">CANDIDATE PORTAL</span>
+                <h5>My Dashboard</h5>
+            </div>
+
+            <div class="topbar-right">
+                <span class="notification-icon">
+                    <i class="fa-regular fa-bell"></i>
+                </span>
+                <div class="topbar-user">
+                    <div class="avatar" id="profileAvatar">C</div>
+                    <span id="topbarCandidateName">Candidate</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="welcome-banner">
+            <div>
+                <span class="welcome-tag">YOUR CAREER JOURNEY</span>
+                <h1>Hello, <span id="welcomeName">Candidate</span>!</h1>
+                <p>Track your application, complete assessments and stay updated on your recruitment journey.</p>
+            </div>
+            <div class="welcome-illustration">
+                <i class="fa-solid fa-user-tie"></i>
+                <i class="fa-solid fa-star welcome-star"></i>
+            </div>
+        </section>
+
+        <section class="dashboard-stats">
+
+            <div class="stat-card">
+                <div class="stat-icon blue-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+                <div>
+                    <span>Application Status</span>
+                    <h3 id="applicationStatus">In Progress</h3>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <div>
+                    <span>Stages Completed</span>
+                    <h3 id="completedStages">0 / 9</h3>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon purple-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <div>
+                    <span>Overall Progress</span>
+                    <h3 id="statProgress">0%</h3>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="dashboard-grid">
+
+            <div class="content-card application-card" id="recruitmentProgress">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow">APPLICATION TRACKER</span>
+                        <h4>Recruitment Progress</h4>
+                        <p>Follow each step of your hiring journey.</p>
+                    </div>
+                    <span class="progress-badge" id="progressText">0%</span>
+                </div>
+
+                <div class="progress-track">
+                    <div id="progressBar" class="progress-fill" style="width:0%"></div>
+                </div>
+
+                <div class="recruitment-stages">
+
+                    <div id="stage-resume" class="stage-row">
+                        <div class="stage-info">
+                            <span class="stage-icon">📄</span>
+                            <div><strong>Resume Upload</strong><small>Upload your latest resume</small></div>
+                        </div>
+                        <a href="upload_resume.html" id="resumeButton" class="stage-button">Start</a>
+                    </div>
+
+                    <div id="stage-ats" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">🤖</span>
+                            <div><strong>ATS Screening</strong><small>Resume skill assessment</small></div>
+                        </div>
+                        <a href="ats_screening.html" id="atsButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-aptitude" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">🧠</span>
+                            <div><strong>Aptitude Assessment</strong><small>Logical and analytical assessment</small></div>
+                        </div>
+                        <a href="aptitude.html" id="aptitudeButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-technical" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">💻</span>
+                            <div><strong>Technical Assessment</strong><small>Technical skills evaluation</small></div>
+                        </div>
+                        <a href="technical.html" id="technicalButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-communication" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">💬</span>
+                            <div><strong>Communication Round</strong><small>Professional communication assessment</small></div>
+                        </div>
+                        <a href="communication.html" id="communicationButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-hr" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">👔</span>
+                            <div><strong>HR Interview</strong><small>Behavioral and HR assessment</small></div>
+                        </div>
+                        <a href="hr.html" id="hrButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-selection" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">🏆</span>
+                            <div><strong>Final Selection</strong><small>Final recruitment decision</small></div>
+                        </div>
+                        <a href="selection.html" id="selectionButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-offer" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">📑</span>
+                            <div><strong>Offer Letter</strong><small>Your employment offer</small></div>
+                        </div>
+                        <a href="offer.html" id="offerButton" class="stage-button">Locked</a>
+                    </div>
+
+                    <div id="stage-onboarding" class="stage-row locked">
+                        <div class="stage-info">
+                            <span class="stage-icon">🏢</span>
+                            <div><strong>Employee Onboarding</strong><small>Complete joining formalities</small></div>
+                        </div>
+                        <a href="onboarding.html" id="onboardingButton" class="stage-button">Locked</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="right-column">
+
+                <div class="content-card profile-card" id="candidateProfile">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-eyebrow">PERSONAL DETAILS</span>
+                            <h4>My Profile</h4>
+                        </div>
+                        <i class="fa-regular fa-user profile-heading-icon"></i>
+                    </div>
+
+                    <div class="profile-avatar-large" id="largeAvatar">C</div>
+                    <h5 id="candidateName">Loading...</h5>
+                    <p class="profile-role">Candidate</p>
+
+                    <div class="profile-detail">
+                        <i class="fa-regular fa-envelope"></i>
+                        <span id="candidateEmail">Loading...</span>
+                    </div>
+
+                    <div class="profile-detail">
+                        <i class="fa-solid fa-phone"></i>
+                        <span id="candidatePhone">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="content-card offer-card">
+                    <div class="offer-icon"><i class="fa-solid fa-file-signature"></i></div>
+                    <h4>Offer & Onboarding</h4>
+                    <p>View your offer letter and track your joining formalities.</p>
+                    <span id="offerSummaryStatus" class="offer-status">Checking status...</span>
+                    <a href="offer.html" class="offer-link">View Offer <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+
+                <div class="content-card help-card" id="help">
+                    <i class="fa-solid fa-headset"></i>
+                    <h5>Need Help?</h5>
+                    <p>Contact the recruitment team if you need assistance with your application.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <footer class="dashboard-footer">
+            © 2026 SmartHire AI. All rights reserved.
+            <span>Powered by ASHHH Technologies</span>
+        </footer>
+
+    </main>
 </div>
-<!-- =====================================
-     RECRUITMENT PROGRESS
-===================================== -->
 
-<div class="dashboard-card" id="recruitmentProgress">
-
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center">
-
-        <h3>
-            <i class="fa-solid fa-chart-line"></i>
-            Recruitment Progress
-        </h3>
-
-        <span id="progressText">0%</span>
-
-    </div>
-
-    <hr>
-
-    <!-- PROGRESS BAR -->
-    <div class="progress mb-4" style="height: 12px;">
-
-        <div
-            id="progressBar"
-            class="progress-bar bg-success"
-            role="progressbar"
-            style="width: 0%;"
-        ></div>
-
-    </div>
-
-
-    <!-- =================================
-         RECRUITMENT STAGES
-    ================================= -->
-
-    <div class="recruitment-stages">
-
-
-        <!-- 1. RESUME UPLOAD -->
-
-        <div
-            id="stage-resume"
-            class="stage-row"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">📄</span>
-
-                <div>
-                    <strong>Resume Upload</strong>
-
-                    <small>
-                        Upload your latest resume
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="upload_resume.html"
-                id="resumeButton"
-                class="stage-button"
-            >
-                Start
-            </a>
-
-        </div>
-
-
-        <!-- 2. ATS SCREENING -->
-
-        <div
-            id="stage-ats"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">🤖</span>
-
-                <div>
-                    <strong>ATS Screening</strong>
-
-                    <small>
-                        Resume skill assessment
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="ats_screening.html"
-                id="atsButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 3. APTITUDE TEST -->
-
-        <div
-            id="stage-aptitude"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">🧠</span>
-
-                <div>
-                    <strong>Aptitude Test</strong>
-
-                    <small>
-                        Logical and analytical assessment
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="aptitude.html"
-                id="aptitudeButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 4. TECHNICAL INTERVIEW -->
-
-        <div
-            id="stage-technical"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">💻</span>
-
-                <div>
-                    <strong>Technical Interview</strong>
-
-                    <small>
-                        Technical skills assessment
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="technical.html"
-                id="technicalButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 5. COMMUNICATION ROUND -->
-
-        <div
-            id="stage-communication"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">💬</span>
-
-                <div>
-                    <strong>Communication Round</strong>
-
-                    <small>
-                        Professional communication assessment
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="communication.html"
-                id="communicationButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 6. HR INTERVIEW -->
-
-        <div
-            id="stage-hr"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">👔</span>
-
-                <div>
-                    <strong>HR Interview</strong>
-
-                    <small>
-                        Behavioral and HR assessment
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="hr.html"
-                id="hrButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 7. SELECTION STATUS -->
-
-        <div
-            id="stage-selection"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">🏆</span>
-
-                <div>
-                    <strong>Selection Status</strong>
-
-                    <small>
-                        Final recruitment decision
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="selection.html"
-                id="selectionButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 8. OFFER LETTER -->
-
-        <div
-            id="stage-offer"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">📄</span>
-
-                <div>
-                    <strong>Offer Letter</strong>
-
-                    <small>
-                        Employment offer
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="offer.html"
-                id="offerButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-        <!-- 9. EMPLOYEE ONBOARDING -->
-
-        <div
-            id="stage-onboarding"
-            class="stage-row locked"
-        >
-
-            <div class="stage-info">
-
-                <span class="stage-icon">🏢</span>
-
-                <div>
-                    <strong>Employee Onboarding</strong>
-
-                    <small>
-                        Complete joining formalities
-                    </small>
-                </div>
-
-            </div>
-
-            <a
-                href="onboarding.html"
-                id="onboardingButton"
-                class="stage-button"
-            >
-                🔒 Locked
-            </a>
-
-        </div>
-
-
-    </div>
-
-</div>
-    <!-- =====================================
-         DASHBOARD JAVASCRIPT
-    ===================================== -->
-
-    <script src="dashboard.js"></script>
-
+<script src="dashboard.js"></script>
 </body>
-
 </html>

@@ -1,7 +1,3 @@
-// =====================================
-// DASHBOARD CONFIGURATION
-// =====================================
-
 const API_BASE_URL = "http://127.0.0.1:8000";
 
 const candidateId = localStorage.getItem("candidate_id");
@@ -18,10 +14,17 @@ const stages = [
     "onboarding"
 ];
 
-
-// =====================================
-// LOGIN CHECK
-// =====================================
+const stageLinks = {
+    resume: "upload_resume.html",
+    ats: "ats_screening.html",
+    aptitude: "aptitude.html",
+    technical: "technical.html",
+    communication: "communication.html",
+    hr: "hr.html",
+    selection: "selection.html",
+    offer: "offer.html",
+    onboarding: "onboarding.html"
+};
 
 if (!candidateId) {
     alert("Please login first.");
@@ -32,6 +35,7 @@ if (!candidateId) {
 // =====================================
 // LOAD CANDIDATE PROFILE
 // =====================================
+
 async function loadCandidate() {
 
     try {
@@ -41,140 +45,150 @@ async function loadCandidate() {
         );
 
         if (!response.ok) {
-            throw new Error("Unable to load candidate.");
+            throw new Error("Unable to load candidate profile.");
         }
 
         const data = await response.json();
 
-        const nameElement = document.getElementById("candidateName");
-        const emailElement = document.getElementById("candidateEmail");
-        const phoneElement = document.getElementById("candidatePhone");
+        const name = data.name || "Candidate";
+        const email = data.email || "Not available";
+        const phone = data.phone || "Not available";
 
-        if (nameElement) {
-            nameElement.innerText = data.name;
-        }
+        document.getElementById("candidateName").innerText = name;
+        document.getElementById("candidateEmail").innerText = email;
+        document.getElementById("candidatePhone").innerText = phone;
 
-        if (emailElement) {
-            emailElement.innerText = data.email;
-        }
+        document.getElementById("welcomeName").innerText = name;
+        document.getElementById("topbarCandidateName").innerText = name;
 
-        if (phoneElement) {
-            phoneElement.innerText = data.phone;
-        }
+        const initial = name.charAt(0).toUpperCase();
 
-        console.log("Candidate profile loaded:", data);
+        document.getElementById("profileAvatar").innerText = initial;
+        document.getElementById("largeAvatar").innerText = initial;
 
-    }
+    } catch (error) {
 
-    catch (error) {
-
-        console.error("Candidate loading error:", error);
+        console.error("Profile loading error:", error);
 
     }
 }
 
 
 // =====================================
-// CHECK WHETHER A STAGE IS COMPLETED
-// =====================================
-
-function isCompleted(status) {
-
-    const completedStatuses = [
-        "completed",
-        "passed",
-        "shortlisted",
-        "selected",
-        "offered",
-        "joined"
-    ];
-
-    return completedStatuses.includes(
-        String(status).toLowerCase()
-    );
-}
-
-
-// =====================================
-// LOAD RECRUITMENT PROGRESS FROM DATABASE
+// LOAD RECRUITMENT PROGRESS
 // =====================================
 
 async function loadRecruitmentProgress() {
 
     try {
 
-        const response = await fetch(
-            `${API_BASE_URL}/candidate/${candidateId}/progress`
-        );
+        const [progressResponse, resumeResponse] = await Promise.all([
 
-        if (!response.ok) {
+            fetch(`${API_BASE_URL}/candidate/${candidateId}/progress`),
+
+            fetch(`${API_BASE_URL}/resume/${candidateId}`)
+
+        ]);
+
+        if (!progressResponse.ok) {
             throw new Error("Unable to load recruitment progress.");
         }
 
-        const data = await response.json();
+        const progress = await progressResponse.json();
 
-        console.log("Recruitment Progress:", data);
+        // Resume may not exist yet for a new candidate.
+        let resume = {};
 
-        updateRecruitmentProgress(data);
+        if (resumeResponse.ok) {
+            resume = await resumeResponse.json();
+        }
 
-    }
+        updateRecruitmentProgress(progress, resume);
 
-    catch (error) {
+    } catch (error) {
 
         console.error("Progress loading error:", error);
-
-        alert("Unable to load recruitment progress. Please try again.");
 
     }
 }
 
 
 // =====================================
-// UPDATE DASHBOARD STAGES
+// CHECK COMPLETED STATUS
 // =====================================
 
-function updateRecruitmentProgress(data) {
+function isCompleted(status) {
+
+    return [
+        "Passed",
+        "Completed",
+        "Selected",
+        "Offered",
+        "Joined"
+    ].includes(status);
+
+}
+
+
+// =====================================
+// UPDATE RECRUITMENT DASHBOARD
+// =====================================
+
+function updateRecruitmentProgress(progress, resume) {
+
+    const resumeUploaded = Boolean(
+        resume.resume_uploaded ||
+        resume.filename ||
+        resume.id
+    );
 
     const statusMap = {
-        resume: data.current_stage !== "resume" ? "Completed" : "Unlocked",
-        ats: data.ats_status,
-        aptitude: data.aptitude_status,
-        technical: data.technical_status,
-        communication: data.communication_status,
-        hr: data.hr_status,
-        selection: data.selection_status,
-        offer: data.offer_status,
-        onboarding: data.onboarding_status
+
+        resume: resumeUploaded ? "Completed" : "Pending",
+
+        ats: progress.ats_status,
+
+        aptitude: progress.aptitude_status,
+
+        technical: progress.technical_status,
+
+        communication: progress.communication_status,
+
+        hr: progress.hr_status,
+
+        selection: progress.selection_status,
+
+        offer: progress.offer_status,
+
+        onboarding: progress.onboarding_status
+
     };
 
     let completedCount = 0;
 
-    const currentStageIndex = stages.indexOf(data.current_stage);
+    stages.forEach((stage) => {
 
-    stages.forEach(function(stage, index) {
+        const row = document.getElementById(`stage-${stage}`);
 
-        const row = document.getElementById("stage-" + stage);
+        const button = document.getElementById(`${stage}Button`);
 
-        const button = document.getElementById(stage + "Button");
-
-        if (!row || !button) {
-            return;
-        }
+        if (!row || !button) return;
 
         const status = statusMap[stage];
 
         const completed = isCompleted(status);
 
+        const failed = status === "Failed" || status === "Rejected";
+
         const unlocked =
-            completed ||
-            stage === data.current_stage ||
-            (index === 0 && data.current_stage === "resume");
+            progress.current_stage === stage ||
+            (stage === "resume" && !resumeUploaded);
 
-        row.classList.remove("locked", "completed");
+        row.classList.remove("locked", "completed", "failed");
 
-        // =================================
-        // COMPLETED STAGE
-        // =================================
+        button.onclick = null;
+
+        button.removeAttribute("aria-disabled");
 
         if (completed) {
 
@@ -183,67 +197,131 @@ function updateRecruitmentProgress(data) {
             row.classList.add("completed");
 
             button.innerText = "✓ Completed";
-            button.style.background = "#16a34a";
-            button.disabled = true;
 
-            return;
+            button.style.background = "";
+
+            button.removeAttribute("href");
+
         }
 
-        // =================================
-        // UNLOCKED STAGE
-        // =================================
+        else if (failed) {
 
-        if (unlocked) {
+            row.classList.add("failed");
 
-            row.classList.remove("locked");
+            button.innerText = status;
+
+            button.style.background = "";
+
+            button.removeAttribute("href");
+
+        }
+
+        else if (unlocked) {
 
             button.innerText = "Start";
-            button.style.background = "#3b82f6";
-            button.disabled = false;
 
-            return;
+            button.style.background = "";
+
+            button.href = stageLinks[stage];
+
         }
 
-        // =================================
-        // LOCKED STAGE
-        // =================================
+        else {
 
-        row.classList.add("locked");
+            row.classList.add("locked");
 
-        button.innerText = "🔒 Locked";
-        button.style.background = "#6b7280";
+            button.innerText = "🔒 Locked";
 
-        button.onclick = function(event) {
+            button.style.background = "";
 
-            event.preventDefault();
+            button.removeAttribute("href");
 
-            alert(
-                "Please complete the previous recruitment stage first."
-            );
+            button.onclick = function(event) {
 
-        };
+                event.preventDefault();
+
+                alert(
+                    "Please complete the previous recruitment stage first."
+                );
+
+            };
+
+        }
 
     });
 
 
-    // =================================
-    // CALCULATE PROGRESS
-    // =================================
+    // =====================================
+    // UPDATE PROGRESS PERCENTAGE
+    // =====================================
 
     const percentage = Math.round(
         (completedCount / stages.length) * 100
     );
 
-    const progressBar = document.getElementById("progressBar");
+    document.getElementById("progressBar").style.width =
+        percentage + "%";
 
-    if (progressBar) {
-        progressBar.style.width = percentage + "%";
+    document.getElementById("progressText").innerText =
+        percentage + "%";
+
+    document.getElementById("statProgress").innerText =
+        percentage + "%";
+
+    document.getElementById("completedStages").innerText =
+        `${completedCount} / ${stages.length}`;
+
+
+    // =====================================
+    // APPLICATION STATUS
+    // =====================================
+
+    let applicationStatus = "In Progress";
+
+    if (progress.current_stage === "completed") {
+
+        applicationStatus = "Completed";
+
+    } else if (progress.selection_status === "Rejected") {
+
+        applicationStatus = "Not Selected";
+
+    } else if (progress.selection_status === "Selected") {
+
+        applicationStatus = "Selected";
+
     }
 
-    const progressText = document.getElementById("progressText");
+    document.getElementById("applicationStatus").innerText =
+        applicationStatus;
 
-    if (progressText) {
-        progressText.innerText = percentage + "%";
+
+    // =====================================
+    // OFFER AND ONBOARDING SUMMARY
+    // =====================================
+
+    const offerStatus = progress.offer_status || "Pending";
+
+    const onboardingStatus = progress.onboarding_status || "Pending";
+
+    const offerSummary = document.getElementById("offerSummaryStatus");
+
+    if (offerSummary) {
+
+        if (onboardingStatus === "Completed") {
+
+            offerSummary.innerText = "Onboarding Completed";
+
+        } else if (offerStatus === "Offered") {
+
+            offerSummary.innerText = "Offer Generated";
+
+        } else {
+
+            offerSummary.innerText = "Awaiting Offer";
+
+        }
+
     }
 
 }
@@ -263,10 +341,12 @@ function logout() {
 
 
 // =====================================
-// INITIALIZE DASHBOARD
+// LOAD DASHBOARD
 // =====================================
 
 document.addEventListener("DOMContentLoaded", function() {
+
+    if (!candidateId) return;
 
     loadCandidate();
 
